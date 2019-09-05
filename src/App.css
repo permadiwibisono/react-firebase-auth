@@ -23,6 +23,26 @@
   color: #61dafb;
 }
 
+.App-container{
+  display: flex;
+  flex-direction: row;
+  margin: 1rem 0px;
+  align-items: center;
+}
+
+.App-button{
+  padding: 1rem 1.5rem;
+  font-size: 1rem;
+  background: #ddd;
+  border: 1px solid #4a4a4a;
+  cursor: pointer;
+  border-radius: 1rem;
+}
+.App-button--google{
+  color: #ffffff;
+  background: rgb(219, 68, 55);
+}
+
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);
