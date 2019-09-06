@@ -1,6 +1,7 @@
 import React from 'react';
 import Button from './Button';
 import { withFirebase } from '../Firebase';
+import axios from 'axios';
 
 function ButtonGoogleSignin({ children, ...props }) {
   // console.log(props)
@@ -21,14 +22,37 @@ function ButtonGoogleSignin({ children, ...props }) {
           firebaseApi.auth.currentUser.getIdToken()
             .then(function(idToken2) {
               console.log("idToken2: ", idToken2)
-              setDataUser(state => ({
-                ...state,
-                isFetch: false,
-                isLogged: true,
-                id: profile.id,
-                email: profile.email,
-                name: profile.name,
-              }))
+              axios.post('http://localhost:8091', {
+                id_token: idToken2
+              }).then(result => {
+                console.log("validate result: ", result)
+                const { data: { message, status_code } } = result;
+                if(message === 'Authorized' && status_code === 200){
+                  setDataUser(state => ({
+                    ...state,
+                    isFetch: false,
+                    isLogged: true,
+                    id: profile.id,
+                    email: profile.email,
+                    name: profile.name,
+                  }))
+                }
+                else{
+                  setDataUser(state => ({
+                    ...state,
+                    isFetch: false,
+                    isLogged: false
+                  }))
+                  console.log("err validate result: ", result)
+                }
+              }).catch(e=>{
+                console.log("err validate result: ", e)
+                setDataUser(state => ({
+                  ...state,
+                  isFetch: false,
+                  isLogged: false
+                }))
+              })
             }).catch(function(error) {
               console.log("error: ", error)
               setDataUser(state => ({ ...state, isFetch: false }))
